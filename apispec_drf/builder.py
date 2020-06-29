@@ -91,7 +91,11 @@ class APISpecDRFBuilder(object):
         valid_scopes = getattr(view, "valid_scopes", [])
         if isinstance(valid_scopes, dict) and method is not None:
             for m in (method, method.lower(), method.upper()):
-                if m in valid_scopes:
+                if "@apispec_scopes" in valid_scopes:
+                    if m in valid_scopes['@apispec_scopes']:
+                        return valid_scopes['@apispec_scopes'][m]
+                    return []
+                elif m in valid_scopes:
                     return valid_scopes[m]
             return []
 
